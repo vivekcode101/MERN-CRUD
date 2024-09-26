@@ -20,7 +20,7 @@ app.use((req, res, next) => {
 });
 
 // routes
-app.use("/api/cruds", crudRoutes);
+app.use("http://backend-traffic-1680559022.ap-south-1.elb.amazonaws.com/api/cruds", crudRoutes);
 //app.use("/api/auth", authRoute);
 
 // listening on port
