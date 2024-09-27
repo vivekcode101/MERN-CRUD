@@ -1,0 +1,88 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "MERN App with CloudFormation"
+
+Parameters:
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: "linux123key"
+    Description: "Name of an existing EC2 KeyPair"
+
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Default: "vpc-02a5108808100fad4"
+
+  SubnetId:
+    Type: AWS::EC2::Subnet::Id
+    Default: "subnet-03d488a3366c61fe7"
+
+Resources:
+
+  MernSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Enable SSH, HTTP, and HTTPS access"
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
+          CidrIp: 0.0.0.0/0
+
+  MernInstance:
+    Type: AWS::EC2::Instance
+    Properties: 
+      InstanceType: t2.medium
+      KeyName: !Ref KeyName
+      ImageId: ami-0c2af51e265bd5e0e  
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          DeviceIndex: 0
+          SubnetId: !Ref SubnetId
+          # Here, use SecurityGroupIds instead of Groups
+          GroupSet:
+            - !Ref MernSecurityGroup
+      UserData:
+        Fn::Base64:
+          !Sub |
+            #!/bin/bash
+            sudo apt update -y
+            sudo apt install npm -y
+            git clone https://github.com/henokrb/MERN-CRUD
+
+            # Set up MongoDB
+            sudo apt-get install -y gnupg curl
+            curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor
+            echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+            sudo apt-get update
+            sudo apt-get install -y mongodb-org
+            sudo systemctl start mongod
+
+            # Import database collections from the repo
+            cd MERN-CRUD/server
+            mongoimport --db MERN --collection Cruds --file Cruds.json --jsonArray
+
+            # Set up the backend
+            npm install
+            node server.js & # Run in the background to avoid blocking
+
+            # Set up the frontend
+            cd ../client
+            npm install
+            npm run build
+            npm start 
+
+      Tags:
+        - Key: Name
+          Value: mern_app_server
