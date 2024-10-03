@@ -3,7 +3,7 @@ module "db_sg" {
 
   name        = "db"
   description = "Security group for db with port 27017 open for backend"
-  vpc_id      = "module.three_tier_vpc"
+  vpc_id      = "module.three_tier_vpc.vpc_id"
 
   # Ingress rules
   ingress_rules = ["http-80-tcp"]
@@ -24,7 +24,7 @@ module "db_sg" {
     Terraform   = "db_sg"
     Environment = "three_tier"
   }
-  depends_on = [module.three_tier_vpc]
+  depends_on = [module.three_tier_vpc.vpc_id]
 }
 
 output "db_sg_id" {
@@ -37,7 +37,7 @@ module "backend_sg" {
 
   name        = "backend_asg"
   description = "Security group for backend with port 8080 open for internal alb"
-  vpc_id      = "module.three_tier_vpc"
+  vpc_id      = "module.three_tier_vpc.vpc_id"
 
   # Ingress rules
   ingress_rules = ["http-80-tcp"]
@@ -58,11 +58,11 @@ module "backend_sg" {
     Terraform   = "backend_sg"
     Environment = "three_tier"
   }
-  depends_on = [module.three_tier_vpc]
+  depends_on = [module.three_tier_vpc.vpc_id, module.db_sg.security_group_id]
 }
 
 output "backend_sg_id" {
-  value = module.backend_asg.security_group_id
+  value = module.backend_sg.security_group_id
   description = "The ID of the db security group"
 }
 
@@ -71,12 +71,13 @@ module "internal_alb_sg" {
 
   name        = "internal_alb_asg"
   description = "Security group for internal_alb with port 443 open for frontend"
-  vpc_id      = "module.three_tier_vpc"
+  vpc_id      = "module.three_tier_vpc.vpc_id"
 
   # Ingress rules
-  ingress_rules = ["https-443-tcp"]
+  ingress_cidr_blocks      = ["10.10.0.0/16"]
+  ingress_rules            = ["https-443-tcp"]
 
-  ingress_with_source_security_group_id = [
+  ingress_with_cidr_blocks = [
     {
       from_port                = 443
       to_port                  = 443
@@ -92,7 +93,7 @@ module "internal_alb_sg" {
     Terraform   = "internal_alb_sg"
     Environment = "three_tier"
   }
-  depends_on = [module.three_tier_vpc]
+  depends_on = [module.three_tier_vpc.vpc_id, module.backend_sg.security_group_id]
 }
 
 output "internal_alb_sg_id" {
@@ -105,7 +106,7 @@ module "frontend_sg" {
 
   name        = "frontend_sg"
   description = "Security group for frontend_sg with port 3000 open for internet facing alb"
-  vpc_id      = "module.three_tier_vpc"
+  vpc_id      = "module.three_tier_vpc.vpc_id"
 
   # Ingress rules
   ingress_rules = ["http-80-tcp"]
@@ -126,7 +127,7 @@ module "frontend_sg" {
     Terraform   = "frontend_sg"
     Environment = "three_tier"
   }
-  depends_on = [module.three_tier_vpc]
+  depends_on = [module.three_tier_vpc.vpc_id, module.internal_alb_sg.security_group_id]
 }
 
 output "frontend_sg_id" {
@@ -139,12 +140,12 @@ module "internet_facing_alb_sg" {
 
   name        = "internet_facing_alb_sg"
   description = "Security group for internet_facing_alb_sg with port 443 open for internet "
-  vpc_id      = "module.three_tier_vpc"
+  vpc_id      = "module.three_tier_vpc.vpc_id"
 
   # Ingress rules
   ingress_rules = ["https-443-tcp"]
 
-  ingress_with_source_security_group_id = [
+  ingress_with_cidr_blocks = [
     {
       from_port                = 443
       to_port                  = 443
@@ -160,7 +161,7 @@ module "internet_facing_alb_sg" {
     Terraform   = "internet_facing_alb_sg"
     Environment = "three_tier"
   }
-  depends_on = [module.three_tier_vpc]
+  depends_on = [module.three_tier_vpc.vpc_id, module.frontend_sg.security_group_id]
 }
 
 output "internet_facing_alb_sg_id" {
