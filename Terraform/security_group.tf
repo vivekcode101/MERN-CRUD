@@ -61,10 +61,7 @@ module "backend_sg" {
   depends_on = [module.three_tier_vpc.vpc_id, module.db_sg.security_group_id]
 }
 
-output "backend_sg_id" {
-  value = module.backend_sg.security_group_id
-  description = "The ID of the db security group"
-}
+
 
 module "internal_alb_sg" {
   source = "terraform-aws-modules/security-group/aws"
@@ -96,10 +93,6 @@ module "internal_alb_sg" {
   depends_on = [module.three_tier_vpc.vpc_id, module.backend_sg.security_group_id]
 }
 
-output "internal_alb_sg_id" {
-  value = module.internal_alb_sg.security_group_id
-  description = "The ID of the internal_alb_sg security group"
-}
 
 module "frontend_sg" {
   source = "terraform-aws-modules/security-group/aws"
@@ -130,10 +123,6 @@ module "frontend_sg" {
   depends_on = [module.three_tier_vpc.vpc_id, module.internal_alb_sg.security_group_id]
 }
 
-output "frontend_sg_id" {
-  value = module.frontend_sg.security_group_id
-  description = "The ID of the frontend_sg security group"
-}
 
 module "internet_facing_alb_sg" {
   source = "terraform-aws-modules/security-group/aws"
@@ -164,7 +153,3 @@ module "internet_facing_alb_sg" {
   depends_on = [module.three_tier_vpc.vpc_id, module.frontend_sg.security_group_id]
 }
 
-output "internet_facing_alb_sg_id" {
-  value = module.internet_facing_alb_sg.security_group_id
-  description = "The ID of the internet_facing_alb_sg security group"
-}

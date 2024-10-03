@@ -15,17 +15,3 @@ module "three_tier_vpc" {
     Environment = "three_tier"
   }
 }
-output "vpc_id" {
-  value = module.three_tier_vpc.vpc_id
-  description = "The ID of the VPC"
-}
-
-output "public_subnet_ids" {
-  value = module.three_tier_vpc.public_subnets
-  description = "The ID of the public subnets"  
-}
-
-output "private_subnet_ids" {
-  value       = module.three_tier_vpc.private_subnets
-  description = "The ID of the private subnets"
-}
