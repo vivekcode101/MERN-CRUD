@@ -24,12 +24,7 @@ module "db_sg" {
     Terraform   = "db_sg"
     Environment = "three_tier"
   }
-  depends_on = [module.three_tier_vpc.vpc_id]
-}
-
-output "db_sg_id" {
-  value = module.db_sg.security_group_id
-  description = "The ID of the db security group"
+  depends_on = [module.three_tier_vpc.vpc_id, module.backend_sg.security_group_id]
 }
 
 module "backend_sg" {
@@ -48,7 +43,7 @@ module "backend_sg" {
       to_port                  = 8080
       protocol                 = "tcp"
       description              = "Allow Backend access from internal ALB"
-      source_security_group_id = "module.backend_sg.security_group_id" # Replace with the actual SG ID of your internal ALB
+      source_security_group_id = "module.internal_alb_sg.security_group_id" # Replace with the actual SG ID of your internal ALB
     }
   ]
   # Egress rule to allow traffic to all
@@ -58,7 +53,7 @@ module "backend_sg" {
     Terraform   = "backend_sg"
     Environment = "three_tier"
   }
-  depends_on = [module.three_tier_vpc.vpc_id, module.db_sg.security_group_id]
+  depends_on = [module.three_tier_vpc.vpc_id, module.internal_alb_sg.security_group_id]
 }
 
 
@@ -90,7 +85,7 @@ module "internal_alb_sg" {
     Terraform   = "internal_alb_sg"
     Environment = "three_tier"
   }
-  depends_on = [module.three_tier_vpc.vpc_id, module.backend_sg.security_group_id]
+  depends_on = [module.three_tier_vpc.vpc_id, module.frontend_sg.security_group_id]
 }
 
 
@@ -120,7 +115,7 @@ module "frontend_sg" {
     Terraform   = "frontend_sg"
     Environment = "three_tier"
   }
-  depends_on = [module.three_tier_vpc.vpc_id, module.internal_alb_sg.security_group_id]
+  depends_on = [module.three_tier_vpc.vpc_id, module.internet_facing_alb_sg.security_group_id]
 }
 
 
@@ -150,6 +145,6 @@ module "internet_facing_alb_sg" {
     Terraform   = "internet_facing_alb_sg"
     Environment = "three_tier"
   }
-  depends_on = [module.three_tier_vpc.vpc_id, module.frontend_sg.security_group_id]
+  depends_on = [module.three_tier_vpc.vpc_id]
 }
 

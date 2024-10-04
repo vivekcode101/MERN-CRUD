@@ -13,6 +13,11 @@ output "private_subnet_ids" {
   description = "The ID of the private subnets"
 }
 
+output "db_sg_id" {
+  value = module.db_sg.security_group_id
+  description = "The ID of the db security group"
+}
+
 output "backend_sg_id" {
   value = module.backend_sg.security_group_id
   description = "The ID of the db security group"
@@ -31,4 +36,9 @@ output "frontend_sg_id" {
 output "internet_facing_alb_sg_id" {
   value = module.internet_facing_alb_sg.security_group_id
   description = "The ID of the internet_facing_alb_sg security group"
+}
+
+output "db_instance_private_ip" {
+  value       = data.aws_instance.db_private.private_ip
+  description = "Private IP address of the instance"
 }
