@@ -53,3 +53,8 @@ output "backend_as_group_id" {
   value       = module.backend_asg.autoscaling_group_id
   description = "The backend autoscaling group id"
 }
+
+output "acm" {
+  value       = module.acm.acm_certificate_arn
+  description = "The ACM certificate ARN"
+}
