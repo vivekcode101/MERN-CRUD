@@ -38,7 +38,18 @@ output "internet_facing_alb_sg_id" {
   description = "The ID of the internet_facing_alb_sg security group"
 }
 
+output  "db_instance_id" {
+  value = aws_launch_template.db_private.id
+  description = "The ID of the db instance"
+}
+
+
 output "db_instance_private_ip" {
   value       = data.aws_instance.db_private.private_ip
   description = "Private IP address of the instance"
+}
+
+output "backend_as_group_id" {
+  value       = module.backend_asg.autoscaling_group_id
+  description = "The backend autoscaling group id"
 }

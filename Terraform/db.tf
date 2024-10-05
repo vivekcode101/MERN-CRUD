@@ -81,6 +81,6 @@ resource "aws_launch_template" "db_private" {
   }
   }
 
-  depends_on = [module.backend_sg.security_group_id]
+  depends_on = [module.db_sg.security_group_id]
   user_data = filebase64("${path.module}/db.sh")
 }
