@@ -4,7 +4,7 @@ output "vpc_id" {
 }
 
 output "public_subnet_ids" {
-  value       = module.three_tier_vpc.public_subnets
+  value       = [module.three_tier_vpc.public_subnets]
   description = "The ID of the public subnets"
 }
 

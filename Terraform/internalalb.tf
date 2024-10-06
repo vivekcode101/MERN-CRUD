@@ -2,27 +2,18 @@ module "internal_alb" {
   source = "terraform-aws-modules/alb/aws"
 
   name    = "internal"
-  vpc_id  = "module.three_tier_vpc.vpc_id"
-  subnets = ["module.three_tier_vpc.private_subnets"]
+  vpc_id  = module.three_tier_vpc.vpc_id
+  subnets = module.three_tier_vpc.private_subnets
 
   # Make the ALB internet-facing
   load_balancer_type = "application" # ALB type
   internal           = true          # Internal load balancer
 
   # Security Group
-  security_groups = module.internal_alb_sg.security_group_id
+  security_groups = [module.internal_alb_sg.security_group_id]
 
 
   listeners = {
-    ex-http-https-redirect = {
-      port     = 80
-      protocol = "HTTP"
-      redirect = {
-        port        = "443"
-        protocol    = "HTTPS"
-        status_code = "HTTP_301"
-      }
-    }
     ex-https = {
       port            = 443
       protocol        = "HTTPS"
@@ -46,7 +37,7 @@ module "internal_alb" {
       }
     }
   }
-  depends_on = [module.acm.acm_certificate_arn]
+  depends_on = [module.three_tier_vpc, module.three_tier_vpc.private_subnets, module.acm.acm_certificate_arn]
   tags = {
     Terraform   = "internal_alb"
     Environment = "three_tier"

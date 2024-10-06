@@ -3,7 +3,7 @@ module "db_sg" {
 
   name        = "db"
   description = "Security group for db with port 27017 open for backend"
-  vpc_id      = "module.three_tier_vpc.vpc_id"
+  vpc_id      = module.three_tier_vpc.vpc_id
 
   # Ingress rules
   ingress_rules = ["http-80-tcp"]
@@ -32,7 +32,7 @@ module "backend_sg" {
 
   name        = "backend_asg"
   description = "Security group for backend with port 8080 open for internal alb"
-  vpc_id      = "module.three_tier_vpc.vpc_id"
+  vpc_id      = module.three_tier_vpc.vpc_id
 
   # Ingress rules
   ingress_rules = ["http-80-tcp"]
@@ -63,7 +63,7 @@ module "internal_alb_sg" {
 
   name        = "internal_alb_asg"
   description = "Security group for internal_alb with port 443 open for frontend"
-  vpc_id      = "module.three_tier_vpc.vpc_id"
+  vpc_id      = module.three_tier_vpc.vpc_id
 
   # Ingress rules
   ingress_cidr_blocks = ["10.10.0.0/16"]
@@ -94,7 +94,7 @@ module "frontend_sg" {
 
   name        = "frontend_sg"
   description = "Security group for frontend_sg with port 3000 open for internet facing alb"
-  vpc_id      = "module.three_tier_vpc.vpc_id"
+  vpc_id      = module.three_tier_vpc.vpc_id
 
   # Ingress rules
   ingress_rules = ["http-80-tcp"]
@@ -124,7 +124,7 @@ module "internet_facing_alb_sg" {
 
   name        = "internet_facing_alb_sg"
   description = "Security group for internet_facing_alb_sg with port 443 open for internet "
-  vpc_id      = "module.three_tier_vpc.vpc_id"
+  vpc_id      = module.three_tier_vpc.vpc_id
 
   # Ingress rules
   ingress_rules = ["https-443-tcp"]

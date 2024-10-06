@@ -63,14 +63,16 @@ resource "aws_launch_template" "db_private" {
   }
 
   network_interfaces {
-    associate_public_ip_address = true
+    associate_public_ip_address = false
+    subnet_id                   = module.three_tier_vpc.private_subnets[0]
+    security_groups             = [module.db_sg.security_group_id]
+
   }
 
   placement {
     availability_zone = "us-east-1a"
   }
 
-  vpc_security_group_ids = ["module.db_sg.security_group_id"]
 
   tag_specifications {
     resource_type = "instance"

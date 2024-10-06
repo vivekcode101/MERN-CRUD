@@ -4,7 +4,7 @@ module "three_tier_vpc" {
   name = "three_tier_vpc"
   cidr = "10.0.0.0/16"
 
-  azs = ["eu-east-1a", "eu-east-1b"]
+  azs = ["us-east-1a", "us-east-1b"]
   private_subnets = [
     "10.0.1.0/24", # First subnet goes to us-east-1a
     "10.0.2.0/24", # Second subnet goes to us-east-1b
