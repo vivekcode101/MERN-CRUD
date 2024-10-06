@@ -75,12 +75,12 @@ resource "aws_launch_template" "db_private" {
   tag_specifications {
     resource_type = "instance"
 
-  tags = {
-    Terraform   = "db_ec2"
-    Environment = "three_tier"
-  }
+    tags = {
+      Terraform   = "db_ec2"
+      Environment = "three_tier"
+    }
   }
 
   depends_on = [module.db_sg.security_group_id]
-  user_data = filebase64("${path.module}/db.sh")
+  user_data  = filebase64("${path.module}/db.sh")
 }

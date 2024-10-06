@@ -2,7 +2,7 @@ module "backend_asg" {
   source = "cloudposse/ec2-autoscale-group/aws"
   # Cloud Posse recommends pinning every module to a specific version
   # version = "x.x.x"
-  name        = "backend_asg"
+  name                        = "backend_asg"
   image_id                    = "ami-005fc0f236362e99f"
   instance_type               = "t2.micro"
   security_group_ids          = ["module.backend_sg.security_group_id"]
@@ -31,14 +31,20 @@ module "backend_asg" {
       }
     }
   ]
+  depends_on = [aws_launch_template.db_private, module.internal_alb_sg]
 
   tags = {
     Terraform   = "backend_ec2"
     Environment = "three_tier"
   }
-  depends_on = [aws_launch_template.db_private]
+  target_group_arns = [module.internal_alb.target_groups["backend"].arn]
   # Auto-scaling policies and CloudWatch metric alarms
   autoscaling_policies_enabled           = true
   cpu_utilization_high_threshold_percent = "70"
   cpu_utilization_low_threshold_percent  = "20"
+}
+
+resource "aws_autoscaling_attachment" "asg_alb_attachment" {
+  autoscaling_group_name = module.backend_asg.autoscaling_group_name
+  lb_target_group_arn    = module.internal_alb.target_groups.backend.arn
 }

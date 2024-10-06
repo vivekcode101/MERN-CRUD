@@ -66,8 +66,8 @@ module "internal_alb_sg" {
   vpc_id      = "module.three_tier_vpc.vpc_id"
 
   # Ingress rules
-  ingress_cidr_blocks      = ["10.10.0.0/16"]
-  ingress_rules            = ["https-443-tcp"]
+  ingress_cidr_blocks = ["10.10.0.0/16"]
+  ingress_rules       = ["https-443-tcp"]
 
   ingress_with_cidr_blocks = [
     {
@@ -131,11 +131,11 @@ module "internet_facing_alb_sg" {
 
   ingress_with_cidr_blocks = [
     {
-      from_port                = 443
-      to_port                  = 443
-      protocol                 = "tcp"
-      description              = "Allow internet_facing_alb_sg from internet"
-      cidr_blocks              = "0.0.0.0/0" # To be accessible from the internet
+      from_port   = 443
+      to_port     = 443
+      protocol    = "tcp"
+      description = "Allow internet_facing_alb_sg from internet"
+      cidr_blocks = "0.0.0.0/0" # To be accessible from the internet
     }
   ]
   # Egress rule to allow traffic to all
