@@ -5,7 +5,7 @@ module "backend_asg" {
   name                        = "backend_asg"
   image_id                    = "ami-005fc0f236362e99f"
   instance_type               = "t2.micro"
-  security_group_ids          = module.backend_sg.security_group_id
+  security_group_ids          = [module.backend_sg.security_group_id]
   subnet_ids                  = module.three_tier_vpc.private_subnets
   health_check_type           = "EC2"
   min_size                    = 2

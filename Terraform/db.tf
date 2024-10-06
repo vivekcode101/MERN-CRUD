@@ -27,13 +27,6 @@ resource "aws_launch_template" "db_private" {
 
   ebs_optimized = true
 
-  elastic_gpu_specifications {
-    type = "test"
-  }
-
-  elastic_inference_accelerator {
-    type = "eia1.medium"
-  }
 
   image_id = "ami-005fc0f236362e99f"
 
@@ -46,10 +39,6 @@ resource "aws_launch_template" "db_private" {
   instance_type = "t2.micro"
 
   key_name = "linux123key"
-
-  license_specification {
-    license_configuration_arn = "arn:aws:license-manager:eu-west-1:123456789012:license-configuration:lic-0123456789abcdef0123456789abcdef"
-  }
 
   metadata_options {
     http_endpoint               = "enabled"
