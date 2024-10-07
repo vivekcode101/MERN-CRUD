@@ -31,7 +31,7 @@ module "backend_asg" {
       }
     }
   ]
-  depends_on = [aws_launch_template.db_private, module.internal_alb_sg]
+  depends_on = [module.db_ec2, module.internal_alb_sg]
 
   tags = {
     Terraform   = "backend_ec2"

@@ -3,5 +3,12 @@ data "aws_instance" "db_private" {
     name   = "tag:Terraform"
     values = ["db_ec2"]
   }
-  depends_on = [aws_launch_template.db_private]
+  
+  filter {
+    name   = "instance-state-name"
+    values = ["running"]  # Add this to filter only running instances
+  }
+
+  # Add any other filters as needed
+  depends_on = [module.db_ec2]
 }

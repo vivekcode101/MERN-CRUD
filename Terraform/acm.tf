@@ -2,9 +2,8 @@ module "acm" {
   source  = "terraform-aws-modules/acm/aws"
   version = "~> 4.0"
 
-  domain_name = "thevy.xyz"
-  zone_id     = "Z01325983DWPRYQIEDNLY" # Ensure this is the correct Hosted Zone ID for your domain
-
+  domain_name       = "thevy.xyz"
+  zone_id           = "Z05712901A9RE3OWF0Z49"
   validation_method = "DNS"
 
   subject_alternative_names = [
