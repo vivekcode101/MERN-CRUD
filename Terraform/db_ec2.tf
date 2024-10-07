@@ -9,9 +9,9 @@ module "db_ec2" {
   sg_ids = [module.db_sg.security_group_id]
 
   #instance
-  instance_count = 1
-  ami            = "ami-005fc0f236362e99f"
-  instance_type  = "t2.micro"
+  instance_count              = 1
+  ami                         = "ami-005fc0f236362e99f"
+  instance_type               = "t2.micro"
   associate_public_ip_address = false
 
   #Networking

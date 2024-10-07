@@ -19,6 +19,7 @@ module "internal_alb" {
   listeners = {
     ex-https = {
       certificate_arn = module.acm.acm_certificate_arn
+      protocol        = "HTTPS"
 
       forward = {
         target_group_key = "backend"
