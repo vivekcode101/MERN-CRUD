@@ -14,7 +14,7 @@ module "db_sg" {
       to_port                  = 27017
       protocol                 = "tcp"
       description              = "Allow MongoDB access from backend"
-      source_security_group_id = "module.backend_sg.security_group_id" # Replace with the actual SG ID of your backend
+      source_security_group_id = module.backend_sg.security_group_id # Replace with the actual SG ID of your backend
     }
   ]
   # Egress rule to allow traffic to all
@@ -43,7 +43,7 @@ module "backend_sg" {
       to_port                  = 8080
       protocol                 = "tcp"
       description              = "Allow Backend access from internal ALB"
-      source_security_group_id = "module.internal_alb_sg.security_group_id" # Replace with the actual SG ID of your internal ALB
+      source_security_group_id = module.internal_alb_sg.security_group_id # Replace with the actual SG ID of your internal ALB
     }
   ]
   # Egress rule to allow traffic to all
@@ -73,7 +73,7 @@ module "internal_alb_sg" {
       to_port                  = 443
       protocol                 = "tcp"
       description              = "Allow frontend to access backend"
-      source_security_group_id = "module.frontend_sg.security_group_id" # Replace with the actual SG ID of your internal ALB
+      source_security_group_id = module.frontend_sg.security_group_id # Replace with the actual SG ID of your internal ALB
     }
   ]
   # Egress rule to allow traffic to all
@@ -103,7 +103,7 @@ module "frontend_sg" {
       to_port                  = 3000
       protocol                 = "tcp"
       description              = "Allow frontend to access backend"
-      source_security_group_id = "module.internet_facing_alb_sg.security_group_id" # Replace with the actual SG ID of your internal ALB
+      source_security_group_id = module.internet_facing_alb_sg.security_group_id # Replace with the actual SG ID of your internal ALB
     }
   ]
   # Egress rule to allow traffic to all
