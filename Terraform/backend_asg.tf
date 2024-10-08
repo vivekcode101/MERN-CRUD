@@ -5,13 +5,14 @@ module "backend_asg" {
   name                        = "backend_asg"
   image_id                    = "ami-005fc0f236362e99f"
   instance_type               = "t2.micro"
+  key_name                    = "linux123"
   security_group_ids          = [module.backend_sg.security_group_id]
   subnet_ids                  = module.three_tier_vpc.private_subnets
   health_check_type           = "EC2"
   min_size                    = 2
   max_size                    = 3
   wait_for_capacity_timeout   = "5m"
-  associate_public_ip_address = true
+  associate_public_ip_address = false
   user_data_base64            = filebase64("${path.module}/backend.sh")
 
   # All inputs to `block_device_mappings` have to be defined
@@ -22,7 +23,7 @@ module "backend_asg" {
       virtual_name = "root"
       ebs = {
         encrypted             = true
-        volume_size           = 200
+        volume_size           = 20
         delete_on_termination = true
         iops                  = null
         kms_key_id            = null

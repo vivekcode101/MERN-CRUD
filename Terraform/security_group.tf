@@ -124,9 +124,6 @@ module "internet_facing_alb_sg" {
   description = "Security group for internet_facing_alb_sg with port 443 open for internet "
   vpc_id      = module.three_tier_vpc.vpc_id
 
-  # Ingress rules
-  ingress_rules = ["https-443-tcp"]
-
   ingress_with_cidr_blocks = [
     {
       from_port   = 443

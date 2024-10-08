@@ -10,9 +10,9 @@ git clone https://github.com/henokrb/MERN-CRUD
 cd MERN-CRUD/server
 
 # Install necessary packages
-sudo apt install -y npm
-npm install
-npm install -g nodemon
+sudo apt install npm -y
+sudo npm install
+sudo npm install -g nodemon
 
 # Replace the MONGODB_URI in the .env file with the database's private IP
 DB_PRIVATE_IP="${db_instance_private_ip}"  # This will be passed in as a variable

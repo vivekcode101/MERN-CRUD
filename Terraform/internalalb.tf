@@ -7,7 +7,7 @@ module "internal_alb" {
 
   # Make the ALB internal
   load_balancer_type = "application" # ALB type
-  internal           = true          # Internal load balancer
+  internal           = true            # Internal load balancer
 
   # Security Group
   security_groups = [module.internal_alb_sg.security_group_id]
@@ -15,31 +15,39 @@ module "internal_alb" {
   # Disable deletion protection
   enable_deletion_protection = false
 
-
   listeners = {
     ex-https = {
       certificate_arn = module.acm.acm_certificate_arn
       protocol        = "HTTPS"
+      port            = 443
 
       forward = {
         target_group_key = "backend"
       }
     }
-  }
+  
+}
 
+  # Target group configuration for backend
   target_groups = {
     backend = {
       name_prefix       = "node"
       protocol          = "HTTP"
-      port              = 80
+      port              = 8080
       target_type       = "instance"
       create_attachment = false
       health_check = {
-        path = "/api/cruds"
+        path                = "/api/cruds"
+        interval            = 30       
+        timeout             = 5        
+        healthy_threshold   = 3        
+        unhealthy_threshold = 3        
       }
     }
   }
+
   depends_on = [module.three_tier_vpc, module.acm.acm_certificate_arn]
+
   tags = {
     Terraform   = "internal_alb"
     Environment = "three_tier"

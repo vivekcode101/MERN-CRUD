@@ -52,3 +52,14 @@ output "acm" {
   value       = module.acm.acm_certificate_arn
   description = "The ACM certificate ARN"
 }
+
+output "dns" {
+  value       = module.internal_alb.dns_name
+  description = "The dns of the internal alb"
+}
+
+output "finaldns" {
+  value       = module.internet_alb.dns_name
+  description = "The dns of the intenet facing alb"
+
+}
