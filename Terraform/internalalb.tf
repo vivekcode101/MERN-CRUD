@@ -7,7 +7,7 @@ module "internal_alb" {
 
   # Make the ALB internal
   load_balancer_type = "application" # ALB type
-  internal           = true            # Internal load balancer
+  internal           = true          # Internal load balancer
 
   # Security Group
   security_groups = [module.internal_alb_sg.security_group_id]
@@ -25,8 +25,8 @@ module "internal_alb" {
         target_group_key = "backend"
       }
     }
-  
-}
+
+  }
 
   # Target group configuration for backend
   target_groups = {
@@ -38,15 +38,15 @@ module "internal_alb" {
       create_attachment = false
       health_check = {
         path                = "/api/cruds"
-        interval            = 30       
-        timeout             = 5        
-        healthy_threshold   = 3        
-        unhealthy_threshold = 3        
+        interval            = 30
+        timeout             = 5
+        healthy_threshold   = 3
+        unhealthy_threshold = 3
       }
     }
   }
 
-  depends_on = [module.three_tier_vpc, module.acm.acm_certificate_arn]
+  depends_on = [module.acm.acm_certificate_arn]
 
   tags = {
     Terraform   = "internal_alb"

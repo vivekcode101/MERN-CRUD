@@ -15,11 +15,12 @@ cd /home/ubuntu/mern-crud/client
 sudo npm install
 
 # Replace '/api/cruds/' with the internal ALB DNS in the frontend files
-INTERNAL_ALB_DNS="${internal_alb_dns}"
-sed -i "s|/api/cruds/|https://${INTERNAL_ALB_DNS}/api/cruds/|g" src/components/cruds/*.js
+INTERNAL_ALB_DNS="${terraform output -raw dns}"
+sed -i "s|/api/cruds|https://${INTERNAL_ALB_DNS}/api/cruds/|g" src/components/cruds/*.js
 
 # Build the frontend
 sudo npm run build
+sudo npm install -g serve
 
 # Create a systemd service to start the frontend automatically
 sudo bash -c 'cat <<EOT > /etc/systemd/system/frontend.service
@@ -28,10 +29,10 @@ Description=Frontend Service
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/npm start
-WorkingDirectory=/home/ubuntu/mern-crud/client
+ExecStart=/usr/bin/serve -s build
+WorkingDirectory=/home/ubuntu/mern-crud/client/build
 Restart=always
-User=ubuntu
+User=root
 Environment=PATH=/usr/bin:/usr/local/bin
 
 [Install]

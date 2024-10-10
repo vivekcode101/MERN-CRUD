@@ -3,7 +3,7 @@ module "internet_alb" {
 
   name    = "internet"
   vpc_id  = module.three_tier_vpc.vpc_id
-  subnets = [module.three_tier_vpc.private_subnets[0], module.three_tier_vpc.private_subnets[1]]
+  subnets = [module.three_tier_vpc.public_subnets[0], module.three_tier_vpc.public_subnets[1]]
 
 
   load_balancer_type = "application"
@@ -26,8 +26,8 @@ module "internet_alb" {
         target_group_key = "frontend"
       }
     }
-  
-}
+
+  }
 
   target_groups = {
     frontend = {
@@ -37,15 +37,14 @@ module "internet_alb" {
       target_type       = "instance"
       create_attachment = false
       health_check = {
-      path                = "/"      
-      interval            = 30       
-      timeout             = 5        
-      healthy_threshold   = 3        
-      unhealthy_threshold = 3        
-    }
+        path                = "/"
+        interval            = 30
+        timeout             = 5
+        healthy_threshold   = 3
+        unhealthy_threshold = 3
+      }
     }
   }
-  depends_on = [module.three_tier_vpc, module.acm.acm_certificate_arn]
   tags = {
     Terraform   = "internal_alb"
     Environment = "three_tier"

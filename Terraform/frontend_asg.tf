@@ -32,7 +32,7 @@ module "frontend_asg" {
       }
     }
   ]
-  depends_on = [module.backend_asg, module.internet_facing_alb_sg]
+  depends_on = [module.internal_alb]
 
   tags = {
     Terraform   = "frontend_ec2"

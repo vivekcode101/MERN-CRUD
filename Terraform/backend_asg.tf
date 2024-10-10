@@ -32,7 +32,7 @@ module "backend_asg" {
       }
     }
   ]
-  depends_on = [module.db_ec2, module.internal_alb_sg]
+  depends_on = [module.db_ec2]
 
   tags = {
     Terraform   = "backend_ec2"
