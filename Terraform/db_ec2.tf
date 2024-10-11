@@ -16,7 +16,7 @@ module "db_ec2" {
   assign_eip_address          = false
 
   #Networking
-  subnet_ids = tolist(module.three_tier_vpc.public_subnets)
+  subnet_ids = tolist(module.three_tier_vpc.private_subnets)
 
   #Keypair
   key_name = "linux123"
@@ -37,6 +37,6 @@ module "db_ec2" {
   instance_tags = { "Terraform" = "db_ec2" }
 
   depends_on = [module.db_sg.security_group_id]
-  user_data  = filebase64("${path.module}/db.sh")
+  user_data  = file("${path.module}/db.sh")
 
 }

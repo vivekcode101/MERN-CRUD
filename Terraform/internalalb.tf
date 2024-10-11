@@ -17,9 +17,8 @@ module "internal_alb" {
 
   listeners = {
     ex-https = {
-      certificate_arn = module.acm.acm_certificate_arn
-      protocol        = "HTTPS"
-      port            = 443
+      protocol = "HTTP"
+      port     = 80
 
       forward = {
         target_group_key = "backend"
@@ -40,13 +39,12 @@ module "internal_alb" {
         path                = "/api/cruds"
         interval            = 30
         timeout             = 5
-        healthy_threshold   = 3
-        unhealthy_threshold = 3
+        healthy_threshold   = 4
+        unhealthy_threshold = 4
       }
     }
   }
 
-  depends_on = [module.acm.acm_certificate_arn]
 
   tags = {
     Terraform   = "internal_alb"

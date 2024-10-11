@@ -69,8 +69,8 @@ module "internal_alb_sg" {
   ingress_cidr_blocks = ["10.10.0.0/16"]
   ingress_with_cidr_blocks = [
     {
-      from_port                = 443
-      to_port                  = 443
+      from_port                = 80
+      to_port                  = 80
       protocol                 = "tcp"
       description              = "Allow frontend to access backend"
       source_security_group_id = module.frontend_sg.security_group_id # Replace with the actual SG ID of your internal ALB
@@ -126,8 +126,8 @@ module "internet_facing_alb_sg" {
 
   ingress_with_cidr_blocks = [
     {
-      from_port   = 443
-      to_port     = 443
+      from_port   = 80
+      to_port     = 80
       protocol    = "tcp"
       description = "Allow internet_facing_alb_sg from internet"
       cidr_blocks = "0.0.0.0/0" # To be accessible from the internet
