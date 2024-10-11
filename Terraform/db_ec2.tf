@@ -13,6 +13,7 @@ module "db_ec2" {
   ami                         = "ami-005fc0f236362e99f"
   instance_type               = "t2.micro"
   associate_public_ip_address = false
+  assign_eip_address          = false
 
   #Networking
   subnet_ids = tolist(module.three_tier_vpc.public_subnets)
@@ -25,7 +26,7 @@ module "db_ec2" {
   root_block_device = [
     {
       volume_type           = "gp2"
-      volume_size           = 20
+      volume_size           = 8
       delete_on_termination = true
     }
   ]

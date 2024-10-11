@@ -1,11 +1,7 @@
 #!/bin/bash
-
+export PRIVATE_IP="${PRIVATE_IP}"
 # Update and install required packages
-sudo apt-get update -y
-sudo apt-get install -y git curl
-
-# Install Node.js and npm
-sudo apt install npm -y
+sudo apt update -y
 
 # Clone the frontend repository
 git clone https://github.com/henokrb/MERN-CRUD.git /home/ubuntu/mern-crud
@@ -18,9 +14,8 @@ sudo apt install npm -y
 sudo npm install
 sudo npm install -g nodemon
 
-# Replace the MONGODB_URI in the .env file with the database's private IP
-DB_PRIVATE_IP="${terraform output -raw db_instance_private_ip}"  # This will be passed in as a variable
-sed -i "s|MONGODB_URI=.*|MONGODB_URI=mongodb://$DB_PRIVATE_IP:27017/MERN|" .env
+
+sed -i "s|MONGODB_URI=.*|MONGODB_URI=mongodb://${PRIVATE_IP}:27017/MERN|" .env
 
 # Create a systemd service for running the app using nodemon
 sudo bash -c 'cat << EOF > /etc/systemd/system/mern-backend.service
@@ -34,7 +29,6 @@ WorkingDirectory=/home/ubuntu/MERN-CRUD/server
 Restart=always
 User=root
 Environment=PORT=8080
-Environment=MONGODB_URI=mongodb://'"$DB_PRIVATE_IP"':27017/MERN
 
 [Install]
 WantedBy=multi-user.target

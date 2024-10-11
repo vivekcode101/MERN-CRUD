@@ -1,14 +1,13 @@
-data "aws_instance" "db_private" {
-  filter {
-    name   = "tag:Terraform"
-    values = ["db_ec2"]
-  }
+data "template_file" "db_private" {
+  template = templatefile("${path.module}/backend.tpl", {
+    PRIVATE_IP = module.db_ec2.private_ip[0]
+  })
+  
+}
 
-  filter {
-    name   = "instance-state-name"
-    values = ["running"] # Add this to filter only running instances
-  }
+data "template_file" "frontend_userdata" {
+  template = templatefile("${path.module}/frontend.tpl", {
+    INTERNAL_ALB_DNS = module.internal_alb.dns_name
+  })
 
-  # Add any other filters as needed
-  depends_on = [module.db_ec2]
 }

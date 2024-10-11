@@ -13,7 +13,7 @@ module "backend_asg" {
   max_size                    = 3
   wait_for_capacity_timeout   = "5m"
   associate_public_ip_address = false
-  user_data_base64            = filebase64("${path.module}/backend.sh")
+  user_data_base64            = base64encode(data.template_file.db_private.rendered)
 
   # All inputs to `block_device_mappings` have to be defined
   block_device_mappings = [
@@ -23,7 +23,7 @@ module "backend_asg" {
       virtual_name = "root"
       ebs = {
         encrypted             = true
-        volume_size           = 20
+        volume_size           = 8
         delete_on_termination = true
         iops                  = null
         kms_key_id            = null
@@ -32,7 +32,6 @@ module "backend_asg" {
       }
     }
   ]
-  depends_on = [module.db_ec2]
 
   tags = {
     Terraform   = "backend_ec2"

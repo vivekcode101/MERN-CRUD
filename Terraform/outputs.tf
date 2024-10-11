@@ -39,7 +39,7 @@ output "internet_facing_alb_sg_id" {
 }
 
 output "db_instance_private_ip" {
-  value       = data.aws_instance.db_private.private_ip
+  value       = module.db_ec2.private_ip
   description = "Private IP address of the instance"
 }
 
