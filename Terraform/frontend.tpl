@@ -13,11 +13,11 @@ sudo apt install npm -y
 git clone https://github.com/vivekcode101/MERN-CRUD /home/ubuntu/mern-crud
 cd /home/ubuntu/mern-crud/client
 
+# Replace '/api/cruds/' with the internal ALB DNS in the frontend files
+sudo sed -i "s|"proxy": ""|"proxy": "${INTERNAL_ALB_DNS}"|g" /home/ubuntu/mern-crud/client/package.json
+
 # Install dependencies
 sudo npm install
-
-# Replace '/api/cruds/' with the internal ALB DNS in the frontend files
-sudo sed -i "s|/api/cruds/|http://${INTERNAL_ALB_DNS}/api/cruds/|g" src/components/cruds/*.js
 
 # Build the frontend
 sudo npm run build

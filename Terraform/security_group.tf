@@ -14,9 +14,10 @@ module "db_sg" {
       to_port                  = 27017
       protocol                 = "tcp"
       description              = "Allow MongoDB access from backend"
-      source_security_group_id = module.backend_sg.security_group_id # Replace with the actual SG ID of your backend
+      source_security_group_id = module.backend_sg.security_group_id
     }
   ]
+
   # Egress rule to allow traffic to all
   egress_rules = ["all-all"]
 
@@ -43,9 +44,10 @@ module "backend_sg" {
       to_port                  = 8080
       protocol                 = "tcp"
       description              = "Allow Backend access from internal ALB"
-      source_security_group_id = module.internal_alb_sg.security_group_id # Replace with the actual SG ID of your internal ALB
+      source_security_group_id = module.internal_alb_sg.security_group_id
     }
   ]
+
   # Egress rule to allow traffic to all
   egress_rules = ["all-all"]
 
@@ -56,26 +58,23 @@ module "backend_sg" {
   depends_on = [module.three_tier_vpc.vpc_id, module.internal_alb_sg.security_group_id]
 }
 
-
-
 module "internal_alb_sg" {
   source = "terraform-aws-modules/security-group/aws"
 
   name        = "internal_alb_asg"
-  description = "Security group for internal_alb with port 443 open for frontend"
+  description = "Security group for internal_alb with port 80 open for frontend"
   vpc_id      = module.three_tier_vpc.vpc_id
 
-  # Ingress rules
-  ingress_cidr_blocks = ["10.10.0.0/16"]
-  ingress_with_cidr_blocks = [
+  ingress_with_source_security_group_id = [
     {
       from_port                = 80
       to_port                  = 80
       protocol                 = "tcp"
       description              = "Allow frontend to access backend"
-      source_security_group_id = module.frontend_sg.security_group_id # Replace with the actual SG ID of your internal ALB
+      source_security_group_id = module.frontend_sg.security_group_id
     }
   ]
+
   # Egress rule to allow traffic to all
   egress_rules = ["all-all"]
 
@@ -85,7 +84,6 @@ module "internal_alb_sg" {
   }
   depends_on = [module.three_tier_vpc.vpc_id, module.frontend_sg.security_group_id]
 }
-
 
 module "frontend_sg" {
   source = "terraform-aws-modules/security-group/aws"
@@ -103,9 +101,10 @@ module "frontend_sg" {
       to_port                  = 3000
       protocol                 = "tcp"
       description              = "Allow frontend to access backend"
-      source_security_group_id = module.internet_facing_alb_sg.security_group_id # Replace with the actual SG ID of your internal ALB
+      source_security_group_id = module.internet_facing_alb_sg.security_group_id
     }
   ]
+
   # Egress rule to allow traffic to all
   egress_rules = ["all-all"]
 
@@ -116,12 +115,11 @@ module "frontend_sg" {
   depends_on = [module.three_tier_vpc.vpc_id, module.internet_facing_alb_sg.security_group_id]
 }
 
-
 module "internet_facing_alb_sg" {
   source = "terraform-aws-modules/security-group/aws"
 
   name        = "internet_facing_alb_sg"
-  description = "Security group for internet_facing_alb_sg with port 443 open for internet "
+  description = "Security group for internet_facing_alb_sg with port 80 open for internet"
   vpc_id      = module.three_tier_vpc.vpc_id
 
   ingress_with_cidr_blocks = [
@@ -129,10 +127,11 @@ module "internet_facing_alb_sg" {
       from_port   = 80
       to_port     = 80
       protocol    = "tcp"
-      description = "Allow internet_facing_alb_sg from internet"
-      cidr_blocks = "0.0.0.0/0" # To be accessible from the internet
+      description = "Allow internet traffic to frontend"
+      cidr_blocks = ["0.0.0.0/0"] # To be accessible from the internet
     }
   ]
+
   # Egress rule to allow traffic to all
   egress_rules = ["all-all"]
 
@@ -142,4 +141,3 @@ module "internet_facing_alb_sg" {
   }
   depends_on = [module.three_tier_vpc.vpc_id]
 }
-
