@@ -12,7 +12,7 @@ function CrudDetails(props) {
 		function () {
 			async function getCrudById() {
 				try {
-					const response = await axios.get(`http://backend-traffic-1680559022.ap-south-1.elb.amazonaws.com/api/cruds/${_id}`);
+					const response = await axios.get(`/api/cruds//${_id}`);
 					setCrud(response.data);
 				} catch (error) {
 					console.log("error", error);
@@ -26,7 +26,7 @@ function CrudDetails(props) {
 
 	async function handleDelete() {
 		try {
-			await axios.delete(`http://backend-traffic-1680559022.ap-south-1.elb.amazonaws.com/api/cruds/${_id}`);
+			await axios.delete(`/api/cruds//${_id}`);
 			navigate("/cruds");
 		} catch (error) {
 			console.error(error);
