@@ -28,3 +28,12 @@ module "three_tier_vpc" {
     Environment = "three_tier"
   }
 }
+
+terraform {
+  backend "s3" {
+    bucket         = "tfstatefilethreetier"  
+    key            = "terraform.tfstate" 
+    region         = "us-east-1"  
+    encrypt        = true
+  }
+}
