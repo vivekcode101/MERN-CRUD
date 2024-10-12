@@ -119,7 +119,7 @@ module "internet_facing_alb_sg" {
   source = "terraform-aws-modules/security-group/aws"
 
   name        = "internet_facing_alb_sg"
-  description = "Security group for internet_facing_alb_sg with port 80 open for internet"
+  description = "Security group for internet_facing_alb_sg with port 443 open for internet "
   vpc_id      = module.three_tier_vpc.vpc_id
 
   ingress_with_cidr_blocks = [
@@ -127,11 +127,10 @@ module "internet_facing_alb_sg" {
       from_port   = 80
       to_port     = 80
       protocol    = "tcp"
-      description = "Allow internet traffic to frontend"
-      cidr_blocks = ["0.0.0.0/0"] # To be accessible from the internet
+      description = "Allow internet_facing_alb_sg from internet"
+      cidr_blocks = "0.0.0.0/0" # To be accessible from the internet
     }
   ]
-
   # Egress rule to allow traffic to all
   egress_rules = ["all-all"]
 

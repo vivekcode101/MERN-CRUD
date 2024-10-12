@@ -37,10 +37,10 @@ module "internet_alb" {
       create_attachment = false
       health_check = {
         path                = "/"
-        interval            = 30
+        interval            = 60
         timeout             = 5
         healthy_threshold   = 4
-        unhealthy_threshold = 4
+        unhealthy_threshold = 6
       }
     }
   }
