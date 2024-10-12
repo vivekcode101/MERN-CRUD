@@ -39,7 +39,7 @@ module "internet_alb" {
         path                = "/"
         interval            = 60
         timeout             = 5
-        healthy_threshold   = 4
+        healthy_threshold   = 2
         unhealthy_threshold = 6
       }
     }
