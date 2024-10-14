@@ -31,9 +31,9 @@ module "three_tier_vpc" {
 
 terraform {
   backend "s3" {
-    bucket         = "tfstatefilethreetier"  
-    key            = "terraform.tfstate" 
-    region         = "us-east-1"  
-    encrypt        = true
+    bucket  = "tfstatefilethreetier"
+    key     = "terraform.tfstate"
+    region  = "us-east-1"
+    encrypt = true
   }
 }

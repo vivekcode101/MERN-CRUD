@@ -124,8 +124,8 @@ module "internet_facing_alb_sg" {
 
   ingress_with_cidr_blocks = [
     {
-      from_port   = 80
-      to_port     = 80
+      from_port   = 443
+      to_port     = 443
       protocol    = "tcp"
       description = "Allow internet_facing_alb_sg from internet"
       cidr_blocks = "0.0.0.0/0" # To be accessible from the internet

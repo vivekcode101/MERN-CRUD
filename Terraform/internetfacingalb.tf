@@ -18,8 +18,9 @@ module "internet_alb" {
 
   listeners = {
     ex-https = {
-      protocol = "HTTP"
-      port     = 80
+      protocol = "HTTPS"
+      port     = 443
+      certificate_arn = module.acm.acm_certificate_arn
 
       forward = {
         target_group_key = "frontend"
